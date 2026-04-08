@@ -8,7 +8,7 @@ from scipy.sparse import issparse
 def load_model():
     model = joblib.load("fix_classifier_chain.pkl")
     mlb = joblib.load("fix_mlb.pkl")
-    tfidf_ing = joblib.load("fix_tfidf_ing.pkl")  # vectorizer TF-IDF
+    tfidf_ing = joblib.load("fix_feature_names_ing.pkl")  # vectorizer TF-IDF
     selected_idx = joblib.load("fix_selected_idx.pkl")    # indeks fitur Chi-Square
     feature_names_ing = joblib.load("fix_selected_features.pkl")  # nama fitur hasil seleksi
     return model, mlb, tfidf_ing, selected_idx, feature_names_ing
