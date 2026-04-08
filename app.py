@@ -3,15 +3,16 @@ import joblib
 import numpy as np
 from scipy.sparse import issparse
 
-# --- Load model dan fitur ---
+# --- Load model, mlb, vectorizer, dan selected features ---
 @st.cache_data
 def load_model():
     model = joblib.load("fix_classifier_chain.pkl")
     mlb = joblib.load("fix_mlb.pkl")
-    feature_names_ing = joblib.load("fix_selected_features.pkl")  # nama fitur
-    return model, mlb, feature_names_ing
+    vectorizer = joblib.load("fix_tfidf_ing.pkl")
+    selected_idx = joblib.load("fix_selected_idx.pkl")
+    return model, mlb, vectorizer, selected_idx
 
-model, mlb, feature_names_ing = load_model()
+model, mlb, vectorizer, selected_idx = load_model()
 
 st.title("Prediksi Efek Samping Kosmetik")
 
@@ -22,22 +23,20 @@ if st.button("Prediksi"):
     if text_input.strip() == "":
         st.warning("Masukkan teks dulu!")
     else:
-        # Asumsikan input sudah berupa fitur numerik sesuai feature_names_ing
-        # Misal user mengisi 0/1 untuk tiap fitur
-        # Contoh sederhana:
-        input_vector = np.zeros(len(feature_names_ing))  # default 0 semua
-        # Di sini bisa isi sesuai input user (misal cek kata, dll)
-        # input_vector[idx] = 1 jika fitur ada
+        # Transformasi teks ke TF-IDF
+        X_new_tfidf = vectorizer.transform([text_input])
 
-        # Pastikan bentuk 2D untuk predict
-        input_vector = input_vector.reshape(1, -1)
+        # Seleksi fitur Chi-Square
+        X_new_chi = X_new_tfidf[:, selected_idx]
+
+        # Ubah ke array kalau sparse
+        if issparse(X_new_chi):
+            X_new_array = X_new_chi.toarray()
+        else:
+            X_new_array = X_new_chi
 
         # Prediksi
-        y_pred = model.predict(input_vector)
-
-        # Jika hasil sparse, ubah ke array
-        if issparse(y_pred):
-            y_pred = y_pred.toarray()
+        y_pred = model.predict(X_new_array)
 
         # Ambil label aktif
         active_idx = np.where(y_pred[0] == 1)[0]
