@@ -5,7 +5,7 @@ from scipy.sparse import issparse
 # --- Load model, mlb, vectorizer fit, dan selected fitur Chi-Square ---
 model = joblib.load("fix_classifier_chain.pkl")
 mlb = joblib.load("fix_mlb.pkl")                # MultiLabelBinarizer dari training
-tfidf_ing = joblib.load("fix_tfidf_ing_fit.pkl")   # vectorizer yang sudah fit
+tfidf_ing = joblib.load("fix_tfidf_ing.pkl")   # vectorizer yang sudah fit
 selected_idx = joblib.load("fix_selected_idx.pkl") # index fitur hasil Chi-Square
 
 st.title("Prediksi Efek Samping Kosmetik")
