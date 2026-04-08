@@ -3,16 +3,17 @@ import joblib
 import numpy as np
 from scipy.sparse import issparse
 
-# --- Load model, mlb, vectorizer, dan selected features ---
+# --- Load model, mlb, vectorizer, dan fitur Chi-Square ---
 @st.cache_data
 def load_model():
     model = joblib.load("fix_classifier_chain.pkl")
     mlb = joblib.load("fix_mlb.pkl")
-    vectorizer = joblib.load("fix_tfidf_ing.pkl")
-    selected_idx = joblib.load("fix_selected_idx.pkl")
-    return model, mlb, vectorizer, selected_idx
+    tfidf_ing = joblib.load("fix_tfidf_ing.pkl")  # vectorizer TF-IDF
+    selected_idx = joblib.load("fix_selected_idx.pkl")    # indeks fitur Chi-Square
+    feature_names_ing = joblib.load("fix_selected_features.pkl")  # nama fitur hasil seleksi
+    return model, mlb, tfidf_ing, selected_idx, feature_names_ing
 
-model, mlb, vectorizer, selected_idx = load_model()
+model, mlb, tfidf_ing, selected_idx, feature_names_ing = load_model()
 
 st.title("Prediksi Efek Samping Kosmetik")
 
@@ -24,12 +25,12 @@ if st.button("Prediksi"):
         st.warning("Masukkan teks dulu!")
     else:
         # Transformasi teks ke TF-IDF
-        X_new_tfidf = vectorizer.transform([text_input])
+        X_new_tfidf = tfidf_ing.transform([text_input])
 
-        # Seleksi fitur Chi-Square
+        # Pilih fitur Chi-Square
         X_new_chi = X_new_tfidf[:, selected_idx]
 
-        # Ubah ke array kalau sparse
+        # Jika sparse, ubah ke array
         if issparse(X_new_chi):
             X_new_array = X_new_chi.toarray()
         else:
