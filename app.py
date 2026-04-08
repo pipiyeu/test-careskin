@@ -5,8 +5,8 @@ from scipy.sparse import issparse
 # Load model + mlb + vectorizer + selected features
 model = joblib.load("fix_classifier_chain.pkl")
 mlb = joblib.load("fix_mlb.pkl")
-tfidf_ing = joblib.load("fix_feature_name_ing.pkl")   # <- vectorizer fit
-selected_idx = joblib.load("fix_selected_features.pkl")    # <- fitur Chi-Square
+tfidf_ing = joblib.load("fix_tfidf_ing.pkl")   # <- vectorizer fit
+selected_idx = joblib.load("fix_feature_name_ing.pkl")    # <- fitur Chi-Square
 
 text_input = st.text_area("Masukkan deskripsi produk:")
 
