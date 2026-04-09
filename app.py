@@ -30,16 +30,6 @@ st.markdown("""
         border: 1px solid #EBBAB9;
     }
 
-    .result-card {
-        padding: 20px;
-        border-radius: 15px;
-        margin-bottom: 15px;
-        text-align: center;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    }
-    .card-manfaat { background-color: #D4EDDA; color: #155724; border: 1px solid #C3E6CB; }
-    .card-resiko { background-color: #F8D7DA; color: #721C24; border: 1px solid #F5C6CB; }
-    
     .section-box {
         padding: 30px;
         background-color: #EBBAB9;
@@ -47,6 +37,18 @@ st.markdown("""
         text-align: center;
         color: #900C3F;
         margin-top: 20px;
+    }
+
+    /* Styling untuk Pills */
+    .pill {
+        padding: 6px 12px; 
+        border-radius: 20px; 
+        margin-right: 8px; 
+        display: inline-block; 
+        margin-bottom: 8px; 
+        font-weight: 500; 
+        cursor: help;
+        border: 1px solid;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -83,15 +85,36 @@ def jalankan_analisis(text):
         return mlb.classes_[active_idx]
     return []
 
+# Kamus Deskripsi untuk Tooltip
+deskripsi_label = {
+    "acne fighting": "Melawan jerawat dan membantu mencegah munculnya jerawat baru.",
+    "acne trigger": "Dapat menyumbat pori-pori atau memicu timbulnya jerawat.",
+    "anti-aging": "Menyamarkan garis halus dan membantu kulit tampak lebih muda.",
+    "brightening": "Mengembalikan kecerahan pada kulit yang kusam dan tampak lelah.",
+    "dark spots": "Memudarkan bintik hitam untuk warna kulit yang lebih merata.",
+    "drying": "Dapat menghilangkan kelembapan alami dan memperburuk kekeringan.",
+    "eczema": "Dapat memperburuk rasa gatal atau iritasi pada kulit eksim.",
+    "good for oily skin": "Menyeimbangkan kadar minyak dan membantu mengurangi kilap.",
+    "hydrating": "Meningkatkan hidrasi dan mengatasi kulit kering serta terasa kencang.",
+    "irritating": "Potensi menyebabkan iritasi atau ketidaknyamanan pada kulit.",
+    "may worsen oily skin": "Dapat meningkatkan kilap atau produksi minyak berlebih.",
+    "redness reducing": "Meredakan kemerahan yang terlihat dan menenangkan iritasi.",
+    "reduces irritation": "Mengurangi rasa tidak nyaman dan mendukung ketahanan kulit.",
+    "reduces large pores": "Meminimalkan tampilan pori-pori yang membesar.",
+    "rosacea": "Dapat memicu kekambuhan pada kulit yang rentan rosacea.",
+    "scar healing": "Memperbaiki tampilan bekas luka dan noda pada kulit.",
+    "skin texture": "Menghaluskan bagian kulit yang kasar dan memperbaiki tekstur."
+}
+
 # --- 6. ALUR TAMPILAN ---
 
 # A. HALAMAN HASIL
 if st.session_state.analisis_selesai:
     st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
-    st.image("logo.png", width=120) 
+    st.image("logo.png", width=100) 
     st.markdown("</div>", unsafe_allow_html=True)
     
-    st.markdown("<h3 style='text-align: center; color: #900C3F;'>Inilah risiko/manfaat yang mungkin ditimbulkan:</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center; color: #900C3F;'>Analysis Result</h3>", unsafe_allow_html=True)
     
     active_labels = st.session_state.hasil_prediksi
     
@@ -106,34 +129,42 @@ if st.session_state.analisis_selesai:
         "may worsen oily skin", "rosacea"
     }
 
-    if len(active_labels) == 0:
+    if not active_labels or len(active_labels) == 0:
         st.info("Tidak ada indikasi manfaat atau risiko spesifik yang terdeteksi.")
     else:
-        for l in active_labels:
-            is_manfaat = l.lower() in manfaat_labels
-            bg_class = "card-manfaat" if is_manfaat else "card-resiko"
-            emoji = "🍀" if is_manfaat else "⚠️"
-            
-            st.markdown(f"""
-                <div class="result-card {bg_class}">
-                    <h4 style="margin:0;">{emoji} {l.title()}</h4>
-                    <p style="margin:0; opacity:0.8;">Berdasarkan analisis kandungan bahan</p>
-                </div>
-            """, unsafe_allow_html=True)
+        manfaat_found = [l for l in active_labels if l.lower() in manfaat_labels]
+        efek_found = [l for l in active_labels if l.lower() in efek_samping_labels]
 
-    st.write("")
-    if st.button("🔄 Analyze Again"):
-        st.session_state.analisis_selesai = False
-        st.rerun()
+        if manfaat_found:
+            st.markdown("**🍀 Manfaat yang ditemukan:** (Sentuh pill untuk detail)")
+            m_html = ""
+            for l in manfaat_found:
+                desc = deskripsi_label.get(l.lower(), "Informasi tidak tersedia.")
+                m_html += f'<span title="{desc}" class="pill" style="background-color: #d4edda; color: #155724; border-color: #c3e6cb;">{l.title()}</span>'
+            st.markdown(m_html, unsafe_allow_html=True)
+
+        if efek_found:
+            st.write("") 
+            st.markdown("**⚠️ Perhatian / Efek Samping:** (Sentuh pill untuk detail)")
+            e_html = ""
+            for l in efek_found:
+                desc = deskripsi_label.get(l.lower(), "Informasi tidak tersedia.")
+                e_html += f'<span title="{desc}" class="pill" style="background-color: #f8d7da; color: #721c24; border-color: #f5c6cb;">{l.title()}</span>'
+            st.markdown(e_html, unsafe_allow_html=True)
+            st.warning("Jika Anda memiliki kulit sensitif, harap perhatikan kandungan di atas.")
+
+    st.write("---")
+    col_btn1, col_btn2, col_btn3 = st.columns([1, 2, 1])
+    with col_btn2:
+        if st.button("🔄 Analyze Another Product", use_container_width=True):
+            st.session_state.analisis_selesai = False
+            st.rerun()
 
 # B. HALAMAN UTAMA (Landing Page)
 else:
-    # Header Section: Logo dan Judul Sampingan
     col_logo, col_text = st.columns([1, 3]) 
-
     with col_logo:
         st.image("logo.png", width=120) 
-
     with col_text:
         st.markdown("""
             <div style='display: flex; flex-direction: column; justify-content: center; height: 100px;'>
@@ -141,7 +172,6 @@ else:
             </div>
         """, unsafe_allow_html=True)
 
-    # Slogan
     st.markdown("""
         <h4 style='text-align: center; background-color: #EBBAB9; padding: 15px; 
         border-radius: 15px; color: #900C3F; margin-top: 10px;'>
@@ -173,9 +203,8 @@ else:
     with col_about1:
         st.markdown("<h3 style='color: #900C3F;'>About Mandali</h3>", unsafe_allow_html=True)
     with col_about2:
-        st.write("Mandali is a smart platform that helps you understand the ingredients in your skincare products. It allows you to check for possible side effects that certain ingredients may have on your skin.")
+        st.write("Mandali is a smart platform that helps you understand the ingredients in your skincare products.")
 
-    # Vision Section
     st.markdown("""
         <div class='section-box'>
             <h3>Our Vision</h3>
@@ -183,16 +212,14 @@ else:
         </div>
     """, unsafe_allow_html=True)
     
-    # Difference Section
     st.write("")
     st.markdown("<h3 style='color: #900C3F;'>What Makes Mandali Different?</h3>", unsafe_allow_html=True)
     st.markdown("""
     * 🔬 **Science-based** ingredient analysis
-    * ✨ **Simple & elegant** design for smooth experience
+    * ✨ **Simple & elegant** design
     * ⚡ **Instant** risk assessment
-    * 👤 **Personalized** for your unique skin needs
     """)
 
 # --- Footer ---
 st.write("---")
-st.markdown("<p style='text-align: center; font-size: 0.8rem; color: #7f8c8d;'>Mandali AI By Luthfinaf © 2026 - Data dianalisis berdasarkan algoritma Machine Learning</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; font-size: 0.8rem; color: #7f8c8d;'>Mandali AI By Luthfinaf © 2026</p>", unsafe_allow_html=True)
