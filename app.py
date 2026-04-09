@@ -71,7 +71,7 @@ assets = load_assets()
 if 'analisis_selesai' not in st.session_state:
     st.session_state.analisis_selesai = False
 if 'hasil_prediksi' not in st.session_state:
-    st.session_state.hasil_prediksi = None
+    st.session_state.hasil_prediksi = []
 
 # --- 5. Logika Prediksi ---
 def jalankan_analisis(text):
@@ -82,7 +82,7 @@ def jalankan_analisis(text):
         y_pred = model.predict(X_chi)
         y_dense = y_pred.toarray() if issparse(y_pred) else y_pred
         active_idx = np.where(y_dense[0] == 1)[0]
-        return mlb.classes_[active_idx]
+        return list(mlb.classes_[active_idx])
     return []
 
 # Kamus Deskripsi untuk Tooltip
@@ -108,8 +108,8 @@ deskripsi_label = {
 
 # --- 6. ALUR TAMPILAN ---
 
-# A. HALAMAN HASIL
 if st.session_state.analisis_selesai:
+    # --- A. HALAMAN HASIL ---
     st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
     st.image("logo.png", width=100) 
     st.markdown("</div>", unsafe_allow_html=True)
@@ -129,7 +129,7 @@ if st.session_state.analisis_selesai:
         "may worsen oily skin", "rosacea"
     }
 
-    if not active_labels or len(active_labels) == 0:
+    if not active_labels:
         st.info("Tidak ada indikasi manfaat atau risiko spesifik yang terdeteksi.")
     else:
         manfaat_found = [l for l in active_labels if l.lower() in manfaat_labels]
@@ -160,8 +160,8 @@ if st.session_state.analisis_selesai:
             st.session_state.analisis_selesai = False
             st.rerun()
 
-# B. HALAMAN UTAMA (Landing Page)
 else:
+    # --- B. HALAMAN UTAMA (Landing Page) ---
     col_logo, col_text = st.columns([1, 3]) 
     with col_logo:
         st.image("logo.png", width=120) 
