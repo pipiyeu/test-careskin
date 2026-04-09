@@ -4,7 +4,7 @@ import numpy as np
 import time
 from scipy.sparse import issparse
 
-# --- 1. Konfigurasi Halaman (WAJIB PALING ATAS) ---
+# --- 1. Konfigurasi Halaman ---
 st.set_page_config(
     page_title="Mandali - Cosmetic Analyzer",
     page_icon="favicon.png", 
@@ -14,10 +14,8 @@ st.set_page_config(
 # --- 2. Custom CSS (Tema Maroon & Pink) ---
 st.markdown("""
     <style>
-    /* Background Utama */
     .stApp { background-color: #F8E1E5; } 
     
-    /* Tombol Utama Maroon */
     div.stButton > button {
         background-color: #900C3F !important;
         color: white !important;
@@ -27,13 +25,11 @@ st.markdown("""
         font-weight: bold;
     }
     
-    /* Input Box */
     .stTextArea textarea { 
         border-radius: 15px; 
         border: 1px solid #EBBAB9;
     }
 
-    /* Card Hasil Prediksi */
     .result-card {
         padding: 20px;
         border-radius: 15px;
@@ -44,7 +40,6 @@ st.markdown("""
     .card-manfaat { background-color: #D4EDDA; color: #155724; border: 1px solid #C3E6CB; }
     .card-resiko { background-color: #F8D7DA; color: #721C24; border: 1px solid #F5C6CB; }
     
-    /* Section Box Footer */
     .section-box {
         padding: 30px;
         background-color: #EBBAB9;
@@ -56,7 +51,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. Fungsi Load Model (Cached) ---
+# --- 3. Fungsi Load Model ---
 @st.cache_resource
 def load_assets():
     try:
@@ -65,7 +60,7 @@ def load_assets():
         tfidf = joblib.load("fix_tfidf_ing.pkl")
         idx = joblib.load("fix_selected_idx.pkl")
         return model, mlb, tfidf, idx
-    except Exception as e:
+    except Exception:
         return None
 
 assets = load_assets()
@@ -90,7 +85,7 @@ def jalankan_analisis(text):
 
 # --- 6. ALUR TAMPILAN ---
 
-# A. HALAMAN HASIL (Setelah Klik Prediksi)
+# A. HALAMAN HASIL
 if st.session_state.analisis_selesai:
     st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
     st.image("logo.png", width=120) 
@@ -133,13 +128,27 @@ if st.session_state.analisis_selesai:
 
 # B. HALAMAN UTAMA (Landing Page)
 else:
-    # Header Section
-    col_l, col_c, col_r = st.columns([1, 2, 1])
-    with col_c:
-        st.image("logo.png", use_container_width=True)
-    
-    st.markdown("<h4 style='text-align: center; background-color: #EBBAB9; padding: 15px; border-radius: 15px; color: #900C3F;'>Discover what's really in your skincare</h4>", unsafe_allow_html=True)
-    
+    # Header Section: Logo dan Judul Sampingan
+    col_logo, col_text = st.columns([1, 3]) 
+
+    with col_logo:
+        st.image("logo.png", width=120) 
+
+    with col_text:
+        st.markdown("""
+            <div style='display: flex; flex-direction: column; justify-content: center; height: 100px;'>
+                <h1 style='margin: 0; color: #900C3F; font-size: 28px;'>Mandali Cosmetic Ingredients Analysis</h1>
+            </div>
+        """, unsafe_allow_html=True)
+
+    # Slogan
+    st.markdown("""
+        <h4 style='text-align: center; background-color: #EBBAB9; padding: 15px; 
+        border-radius: 15px; color: #900C3F; margin-top: 10px;'>
+            Discover what's really in your skincare
+        </h4>
+    """, unsafe_allow_html=True)
+
     st.write("")
     st.markdown("<h3 style='color: #900C3F;'>Side Effect Checker</h3>", unsafe_allow_html=True)
     text_input = st.text_area("Type or paste the list of ingredients here:", height=150, placeholder="Aqua, Glycerin, Niacinamide...")
@@ -152,7 +161,7 @@ else:
         else:
             with st.status("Please wait a moment...", expanded=True) as status:
                 st.write("Sedang membedah kandungan...")
-                time.sleep(1.5) # Efek dramatis loading
+                time.sleep(1.5)
                 st.session_state.hasil_prediksi = jalankan_analisis(text_input)
                 st.session_state.analisis_selesai = True
                 status.update(label="Analisis Selesai!", state="complete")
