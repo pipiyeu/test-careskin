@@ -259,11 +259,18 @@ else:
     with col_text:
         st.markdown("<h1 style='color: #900C3F; margin-top: 20px;'>Mandali Analyzer</h1>", unsafe_allow_html=True)
 
-    st.markdown("<h4 style='text-align: center; background-color: #EBBAB9; padding: 15px; border-radius: 15px; color: #900C3F;'>Beauty in Every Ingredient, Clarity in Every Scan</h4>", unsafe_allow_html=True)
-
+    # Menambahkan margin-bottom: 25px agar ada ruang di bawah kotak slogan
     st.markdown("""
-    <p style='margin-top: 20px; color: #555; font-size: 16px;'>
-        Enter a list of ingredients for your product below
+    <h4 style='text-align: center; background-color: #EBBAB9; padding: 15px; 
+    border-radius: 15px; color: #900C3F; margin-bottom: 25px;'>
+        Beauty in Every Ingredient, Clarity in Every Scan
+    </h4>
+    """, unsafe_allow_html=True)
+
+    # Menambahkan margin-top: 10px untuk memperhalus transisi jarak
+    st.markdown("""
+    <p style='margin-top: 10px; color: #555; font-size: 16px; font-weight: 500;'>
+        Enter a list of ingredients for your product below:
     </p>
     """, unsafe_allow_html=True)
 
