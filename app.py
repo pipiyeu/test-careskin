@@ -155,39 +155,97 @@ else:
     with col_text:
         st.markdown("<h1 style='color: #900C3F; margin-top: 20px;'>Mandali Analyzer</h1>", unsafe_allow_html=True)
 
-    st.markdown("<h4 style='text-align: center; background-color: #EBBAB9; padding: 15px; border-radius: 15px; color: #900C3F;'>Discover what's really in your skincare</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='text-align: center; background-color: #EBBAB9; padding: 15px; border-radius: 15px; color: #900C3F;'>Beauty in Every Ingredient, Clarity in Every Scan</h4>", unsafe_allow_html=True)
 
     st.write("")
-    st.markdown("<h3 style='color: #900C3F;'>Side Effect Checker</h3>", unsafe_allow_html=True)
     text_input = st.text_area("Type or paste ingredients:", height=150, placeholder="Aqua, Glycerin...", label_visibility="collapsed")
     
     if st.button("START ANALYSIS NOW"):
         if text_input.strip():
-            with st.status("Analyzing...", expanded=True):
+            with st.status("Please wait a moment...", expanded=True):
                 time.sleep(1.5)
                 st.session_state.hasil_prediksi = jalankan_analisis(text_input)
                 st.session_state.analisis_selesai = True
             st.rerun()
-        else: st.warning("Silakan masukkan daftar ingredients.")
+        else: st.warning("Please enter a list of ingredients.")
 
     # Bagian Info (About & Why) - Diperbaiki tampilannya
+    # --- About Mandali Section ---
     st.write("---")
-    c1, c2 = st.columns(2)
-    with c1:
-        st.markdown("""<div class="info-card">
-            <b style='color:#900C3F'>About Mandali</b><br>
-            <small>Mandali membantu Anda memahami isi produk skincare agar keputusan belanja lebih cerdas dan aman.</small>
+    st.markdown("""
+        <div class="info-card" style="margin-bottom: 20px;">
+            <h3 style='color:#900C3F; margin-top:0;'>About Mandali</h3>
+            <p style='font-size: 14px; line-height: 1.6; color: #444;'>
+                <b>Mandali</b> is an intelligent cosmetic content analysis platform designed to be a bridge between the complexity of product labels and user understanding. 
+                We believe that everyone has the right to know what they are putting on their skin without having to be a chemist.
+                In the midst of thousands of choices, Mandali is here to provide transparency. Using data-driven technology, 
+                we dissect every component in your ingredients list to uncover hidden benefits and potential risks.
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # --- What We Do Section ---
+    st.markdown("<h3 style='color: #900C3F; text-align: center; margin-top: 30px;'>What We Do</h3>", unsafe_allow_html=True)
+    
+    col_a, col_b = st.columns(2)
+    with col_a:
+        st.markdown("""
+            <div class="info-card">
+                <p style='font-weight: 700; color: #900C3F; margin-bottom: 5px;'>⚡ Instant Analysis</p>
+                <p style='font-size: 13px; color: #555;'>Simply input your ingredients list, and Mandali will process it in a matter of seconds.</p>
+            </div>
+            <div style='height: 15px;'></div>
+            <div class="info-card">
+                <p style='font-weight: 700; color: #900C3F; margin-bottom: 5px;'>🔍 Benefit Identification</p>
+                <p style='font-size: 13px; color: #555;'>Discover active ingredients that support skin health, ranging from anti-aging to acne-fighting properties.</p>
+            </div>
+        """, unsafe_allow_html=True)
+        
+    with col_b:
+        st.markdown("""
+            <div class="info-card">
+                <p style='font-weight: 700; color: #900C3F; margin-bottom: 5px;'>⚠️ Risk Warnings</p>
+                <p style='font-size: 13px; color: #555;'>Identify ingredients that potentially trigger irritation, acne, or flare-ups for sensitive skin conditions.</p>
+            </div>
+            <div style='height: 15px;'></div>
+            <div class="info-card">
+                <p style='font-weight: 700; color: #900C3F; margin-bottom: 5px;'>📖 Trusted Education</p>
+                <p style='font-size: 13px; color: #555;'>Provide easy-to-understand descriptions for every analysis result, allowing you to learn while you care.</p>
+            </div>
+        """, unsafe_allow_html=True)
+
+    # --- Why Mandali Section ---
+    st.markdown("<h3 style='color: #900C3F; text-align: center; margin-top: 40px;'>Why Mandali?</h3>", unsafe_allow_html=True)
+    
+    row_why = st.columns(3)
+    with row_why[0]:
+        st.markdown("""<div class="info-card" style="text-align:center; min-height:180px;">
+            <span style='font-size:30px;'>🔬</span><br>
+            <b style='color:#900C3F'>Science-Based</b><br>
+            <p style='font-size: 12px; color: #555;'>Predictions based on technically tested cosmetic data patterns.</p>
         </div>""", unsafe_allow_html=True)
-    with c2:
-        st.markdown("""<div class="info-card">
-            <b style='color:#900C3F'>Why Us?</b><br>
-            <small>🔬 Berbasis Sains<br>⚡ Hasil Instan<br>👤 Personal</small>
+    with row_why[1]:
+        st.markdown("""<div class="info-card" style="text-align:center; min-height:180px;">
+            <span style='font-size:30px;'>✨</span><br>
+            <b style='color:#900C3F'>Elegant Design</b><br>
+            <p style='font-size: 12px; color: #555;'>Prioritizing visual comfort for a luxurious self-care experience.</p>
+        </div>""", unsafe_allow_html=True)
+    with row_why[2]:
+        st.markdown("""<div class="info-card" style="text-align:center; min-height:180px;">
+            <span style='font-size:30px;'>👤</span><br>
+            <b style='color:#900C3F'>Personalized</b><br>
+            <p style='font-size: 12px; color: #555;'>Helping you tailor choices to your unique skin needs.</p>
         </div>""", unsafe_allow_html=True)
 
-    st.markdown("""<div style='background-color:#900C3F; color:white; padding:20px; border-radius:15px; text-align:center; margin-top:20px;'>
-        <h4 style='color:white'>Our Vision</h4>
-        <p style='font-style:italic; font-size:14px;'>"To make every skincare decision safer, smarter, and more personal"</p>
-    </div>""", unsafe_allow_html=True)
+    # --- Vision Section ---
+    st.markdown("""
+        <div style='background-color:#900C3F; color:white; padding:35px; border-radius:20px; text-align:center; margin-top:40px; box-shadow: 0 4px 15px rgba(144, 12, 63, 0.2);'>
+            <h4 style='color:white; margin:0; font-size: 20px;'>Our Vision</h4>
+            <p style='font-style:italic; font-size:16px; opacity:0.9; margin-top:10px;'>
+                "To make every skincare decision safer, smarter, and more personal"
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
 
-# Footer
-st.markdown("<p style='text-align: center; font-size: 11px; color: #A64452; margin-top: 30px;'>Mandali AI By Luthfinaf © 2026</p>", unsafe_allow_html=True)
+# --- Footer ---
+st.markdown("<p style='text-align: center; font-size: 11px; color: #A64452; margin-top: 40px; padding-bottom: 20px;'>Mandali AI By Luthfinaf © 2026</p>", unsafe_allow_html=True)
