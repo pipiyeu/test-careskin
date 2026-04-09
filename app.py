@@ -195,11 +195,18 @@ deskripsi_label = {
 
 if st.session_state.analisis_selesai:
     # --- A. HALAMAN HASIL (Sesuai Struktur Asli Anda) ---
-    st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
-    st.image("logo.png", width=100) 
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-    st.markdown("<h3 style='text-align: center; color: #900C3F;'>Analysis Result</h3>", unsafe_allow_html=True)
+    st.markdown("""
+    <div style="
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        gap: 20px; 
+        margin-bottom: 20px;
+    ">
+        <img src="logo.png" width="80" style="border-radius: 10px;"> 
+        <h2 style="color: #900C3F; margin: 0; font-weight: 700;">Analysis Result</h2>
+    </div>
+    """, unsafe_allow_html=True)
     
     active_labels = st.session_state.hasil_prediksi
     
