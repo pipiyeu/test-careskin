@@ -49,6 +49,77 @@ st.markdown("""
         cursor: help;
         border: 1px solid;
     }
+            
+    /* Container utama untuk pill agar tooltip bisa muncul relatif terhadapnya */
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+/* Styling Pill Dasar */
+.pill {
+    padding: 8px 16px;
+    border-radius: 50px;
+    margin-right: 8px;
+    display: inline-block;
+    margin-bottom: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid;
+}
+
+/* Tooltip Text (Sembunyi secara default) */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: #444;
+    color: #fff;
+    text-align: center;
+    border-radius: 10px;
+    padding: 10px;
+    position: absolute;
+    z-index: 100;
+    bottom: 135%; /* Muncul di atas pill */
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.4;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transform: translateY(10px);
+}
+
+/* Panah kecil di bawah tooltip */
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #444 transparent transparent transparent;
+}
+
+/* Efek Hover: Munculkan Tooltip & Pill sedikit membesar */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0px);
+}
+
+.tooltip:hover .pill {
+    transform: scale(1.05);
+    filter: brightness(0.95);
+}
+
+/* Warna Spesifik */
+.manfaat-style { background-color: #E8F5E9; color: #2E7D32; border-color: #C8E6C9; }
+.efek-style { background-color: #FFEBEE; color: #C62828; border-color: #FFCDD2; }
     </style>
 """, unsafe_allow_html=True)
 
@@ -117,33 +188,43 @@ if st.session_state.analisis_selesai:
     efek_samping_labels = {"acne trigger", "drying", "eczema", "irritating", "may worsen oily skin", "rosacea"}
 
     if not active_labels:
-        st.info("Tidak ada indikasi manfaat atau risiko spesifik yang terdeteksi.")
+        st.info("No indication of specific benefit or risk was detected.")
     else:
         manfaat_found = [l for l in active_labels if l.lower() in manfaat_labels]
         efek_found = [l for l in active_labels if l.lower() in efek_samping_labels]
 
         if manfaat_found:
-            st.markdown("**🍀 Manfaat yang ditemukan:** (Sentuh pill untuk detail)")
+            st.markdown("**🍀 Benefits found:**")
             m_html = ""
             for l in manfaat_found:
-                desc = deskripsi_label.get(l.lower(), "Informasi tidak tersedia.")
-                m_html += f'<span title="{desc}" class="pill" style="background-color: #d4edda; color: #155724; border-color: #c3e6cb;">{l.title()}</span>'
+                desc = deskripsi_label.get(l.lower(), "Information not available.")
+                # Menggunakan class 'tooltip' untuk membungkus pill
+                m_html += f'''
+                <div class="tooltip">
+                    <span class="pill manfaat-style">{l.title()}</span>
+                    <span class="tooltiptext">{desc}</span>
+                </div>
+                '''
             st.markdown(m_html, unsafe_allow_html=True)
 
         if efek_found:
             st.write("") 
-            st.markdown("**⚠️ Perhatian / Efek Samping:** (Sentuh pill untuk detail)")
+            st.markdown("**⚠️ Cautions/Side Effects:**")
             e_html = ""
             for l in efek_found:
-                desc = deskripsi_label.get(l.lower(), "Informasi tidak tersedia.")
-                e_html += f'<span title="{desc}" class="pill" style="background-color: #f8d7da; color: #721c24; border-color: #f5c6cb;">{l.title()}</span>'
+                desc = deskripsi_label.get(l.lower(), "Information not available.")
+                e_html += f'''
+                <div class="tooltip">
+                    <span class="pill efek-style">{l.title()}</span>
+                    <span class="tooltiptext">{desc}</span>
+                </div>
+                '''
             st.markdown(e_html, unsafe_allow_html=True)
-            st.warning("Jika Anda memiliki kulit sensitif, harap perhatikan kandungan di atas.")
-
+           
     st.write("---")
     col_btn1, col_btn2, col_btn3 = st.columns([1, 2, 1])
     with col_btn2:
-        if st.button("🔄 Analyze Another Product", use_container_width=True):
+        if st.button("Analyze Another Product", use_container_width=True):
             st.session_state.analisis_selesai = False
             st.rerun()
 
@@ -157,7 +238,7 @@ else:
 
     st.markdown("<h4 style='text-align: center; background-color: #EBBAB9; padding: 15px; border-radius: 15px; color: #900C3F;'>Beauty in Every Ingredient, Clarity in Every Scan</h4>", unsafe_allow_html=True)
 
-    st.write("")
+    st.write("Enter a list of ingredients for your product below")
     text_input = st.text_area("Type or paste ingredients:", height=150, placeholder="Aqua, Glycerin...", label_visibility="collapsed")
     
     if st.button("START ANALYSIS NOW"):
