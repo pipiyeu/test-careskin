@@ -110,13 +110,13 @@ deskripsi_label = {
 
 if st.session_state.analisis_selesai:
     # --- A. HALAMAN HASIL ---
+    active_labels = st.session_state.hasil_prediksi
+
     st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
     st.image("logo.png", width=100) 
     st.markdown("</div>", unsafe_allow_html=True)
-    
     st.markdown("<h3 style='text-align: center; color: #900C3F;'>Analysis Result</h3>", unsafe_allow_html=True)
     
-    active_labels = st.session_state.hasil_prediksi
     
     manfaat_labels = {
         "acne fighting", "anti-aging", "brightening", "dark spots", 
