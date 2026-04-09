@@ -1,5 +1,6 @@
 import joblib
 import streamlit as st
+import numpy as np
 from scipy.sparse import issparse
 
 # --- Load model, mlb, vectorizer fit, dan selected fitur Chi-Square ---
