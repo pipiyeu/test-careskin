@@ -28,15 +28,32 @@ st.markdown("""
         height: 100%;
     }
 
-    /* Button Styling */
-    div.stButton > button {
-        background: linear-gradient(135deg, #900C3F 0%, #C70039 100%) !important;
-        color: white !important;
-        border-radius: 12px !important;
-        padding: 10px 20px !important;
-        border: none !important;
-        font-weight: 600 !important;
-    }
+    /* Styling Dasar Tombol */
+div.stButton > button {
+    background: linear-gradient(135deg, #900C3F 0%, #C70039 100%) !important;
+    color: white !important;
+    border-radius: 12px !important;
+    padding: 12px 24px !important;
+    border: none !important;
+    font-weight: 600 !important;
+    width: 100%;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important; /* Animasi halus */
+    box-shadow: 0 4px 6px rgba(144, 12, 63, 0.1) !important;
+}
+
+/* Efek HOVER */
+div.stButton > button:hover {
+    transform: translateY(-3px) !important; /* Tombol naik sedikit */
+    box-shadow: 0 8px 15px rgba(144, 12, 63, 0.3) !important; /* Bayangan lebih dalam */
+    background: linear-gradient(135deg, #A61246 0%, #D81B45 100%) !important; /* Warna sedikit lebih terang */
+    color: #ffffff !important;
+}
+
+/* Efek saat diklik (ACTIVE) */
+div.stButton > button:active {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 2px 4px rgba(144, 12, 63, 0.2) !important;
+}
 
     /* Tampilan Pill (Hasil) */
     .pill {
@@ -122,6 +139,8 @@ st.markdown("""
 .efek-style { background-color: #FFEBEE; color: #C62828; border-color: #FFCDD2; }
     </style>
 """, unsafe_allow_html=True)
+
+
 
 # --- 3. Fungsi Load Model ---
 @st.cache_resource
@@ -238,7 +257,12 @@ else:
 
     st.markdown("<h4 style='text-align: center; background-color: #EBBAB9; padding: 15px; border-radius: 15px; color: #900C3F;'>Beauty in Every Ingredient, Clarity in Every Scan</h4>", unsafe_allow_html=True)
 
-    st.write("Enter a list of ingredients for your product below")
+    st.markdown("""
+    <p style='margin-top: 20px; color: #555; font-size: 16px;'>
+        Enter a list of ingredients for your product below
+    </p>
+    """, unsafe_allow_html=True)
+
     text_input = st.text_area("Type or paste ingredients:", height=150, placeholder="Aqua, Glycerin...", label_visibility="collapsed")
     
     if st.button("START ANALYSIS NOW"):
