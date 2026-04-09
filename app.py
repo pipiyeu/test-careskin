@@ -17,7 +17,7 @@ from scipy.sparse import issparse
 # Konfigurasi Halaman (Harus di paling atas)
 st.set_page_config(
     page_title="Mandali - Cosmetic Analyzer",
-    page_icon="✨",
+    page_icon="logo.png",
     layout="centered"
 )
 
@@ -76,7 +76,7 @@ except Exception as e:
     st.stop()
 
 # --- Header ---
-st.markdown("<h1 style='text-align: center; color: #2c3e50;'>✨ Mandali Analyzer</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: #2c3e50;'> Mandali Analyzer</h1>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; color: #7f8c8d;'>Cek manfaat dan risiko kandungan kosmetik Anda dalam satu klik.</p>", unsafe_allow_html=True)
 st.divider()
 
