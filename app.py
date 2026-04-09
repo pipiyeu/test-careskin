@@ -1,14 +1,12 @@
 import joblib
 import streamlit as st
-import numpy as np
 from scipy.sparse import issparse
 
 # --- Load model, mlb, vectorizer fit, dan selected fitur Chi-Square ---
-# Pastikan file-file ini ada di direktori yang sama
 model = joblib.load("fix_classifier_chain.pkl")
-mlb = joblib.load("fix_mlb.pkl")
-tfidf_ing = joblib.load("fix_tfidf_ing.pkl")
-selected_idx = joblib.load("fix_selected_idx.pkl")
+mlb = joblib.load("fix_mlb.pkl")                # MultiLabelBinarizer dari training
+tfidf_ing = joblib.load("fix_tfidf_ing.pkl")   # vectorizer yang sudah fit
+selected_idx = joblib.load("fix_selected_idx.pkl") # index fitur hasil Chi-Square
 
 st.title("✨ Prediksi Efek Samping & Manfaat Kosmetik")
 st.write("Masukkan daftar bahan (ingredients) produk Anda di bawah ini.")
