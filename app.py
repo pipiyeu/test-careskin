@@ -7,7 +7,7 @@ from scipy.sparse import issparse
 # --- 1. Konfigurasi Halaman ---
 st.set_page_config(
     page_title="Mandali - Cosmetic Analyzer",
-    page_icon="🍀", 
+    page_icon="favicon.png", 
     layout="centered"
 )
 
@@ -203,7 +203,6 @@ if st.session_state.analisis_selesai:
         gap: 20px; 
         margin-bottom: 20px;
     ">
-        <img src="logo.png" width="80" style="border-radius: 10px;"> 
         <h2 style="color: #900C3F; margin: 0; font-weight: 700;">Analysis Result</h2>
     </div>
     """, unsafe_allow_html=True)
@@ -256,9 +255,7 @@ if st.session_state.analisis_selesai:
 
 else:
     # --- B. HALAMAN UTAMA (Diperbaiki agar tidak ada kotak kosong) ---
-    col_logo, col_text = st.columns([1, 3]) 
-    with col_logo:
-        st.image("logo.png", width=120) 
+    col_logo, col_text = st.columns([1, 3])  
     with col_text:
         st.markdown("<h1 style='color: #900C3F; margin-top: 20px;'>Mandali Analyzer</h1>", unsafe_allow_html=True)
 
