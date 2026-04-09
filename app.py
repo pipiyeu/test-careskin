@@ -7,48 +7,116 @@ from scipy.sparse import issparse
 # --- 1. Konfigurasi Halaman ---
 st.set_page_config(
     page_title="Mandali - Cosmetic Analyzer",
-    page_icon="favicon.png", 
+    page_icon="Favicon.png", 
     layout="centered"
 )
 
-# --- 2. Custom CSS (Tema Maroon & Pink) ---
+# --- 2. Custom CSS Modern & Friendly ---
 st.markdown("""
     <style>
-    .stApp { background-color: #F8E1E5; } 
+    /* Mengatur Font Utama */
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap');
     
+    html, body, [class*="css"] {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .stApp { background-color: #FDF5F6; } 
+
+    /* Header Styling */
+    .main-title {
+        color: #72102C;
+        font-weight: 700;
+        font-size: 32px;
+        margin-bottom: 0px;
+    }
+    
+    .sub-title {
+        color: #A64452;
+        font-weight: 400;
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+
+    /* Card Styling */
+    .glass-card {
+        background: white;
+        padding: 25px;
+        border-radius: 20px;
+        border: 1px solid #FADADD;
+        box-shadow: 0 10px 25px rgba(144, 12, 63, 0.05);
+        margin-bottom: 20px;
+    }
+
+    /* Button Styling */
     div.stButton > button {
-        background-color: #900C3F !important;
+        background: linear-gradient(135deg, #900C3F 0%, #C70039 100%) !important;
         color: white !important;
-        border-radius: 25px;
-        padding: 10px 25px;
-        border: none;
-        font-weight: bold;
+        border-radius: 12px !important;
+        padding: 12px 24px !important;
+        border: none !important;
+        font-weight: 600 !important;
+        width: 100%;
+        transition: all 0.3s ease;
     }
     
+    div.stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(144, 12, 63, 0.3) !important;
+    }
+
+    /* Input Area */
     .stTextArea textarea { 
-        border-radius: 15px; 
-        border: 1px solid #EBBAB9;
+        border-radius: 15px !important; 
+        border: 1px solid #FADADD !important;
+        background-color: #FFF !important;
     }
 
-    .section-box {
-        padding: 30px;
-        background-color: #EBBAB9;
-        border-radius: 15px;
-        text-align: center;
-        color: #900C3F;
-        margin-top: 20px;
-    }
-
-    /* Styling untuk Pills */
+    /* Pill Styling */
     .pill {
-        padding: 6px 12px; 
-        border-radius: 20px; 
+        padding: 8px 16px; 
+        border-radius: 50px; 
         margin-right: 8px; 
         display: inline-block; 
-        margin-bottom: 8px; 
-        font-weight: 500; 
+        margin-bottom: 10px; 
+        font-size: 13px;
+        font-weight: 600; 
         cursor: help;
-        border: 1px solid;
+        transition: all 0.2s ease;
+    }
+    
+    .pill-manfaat {
+        background-color: #E8F5E9;
+        color: #2E7D32;
+        border: 1px solid #C8E6C9;
+    }
+    
+    .pill-efek {
+        background-color: #FFEBEE;
+        color: #C62828;
+        border: 1px solid #FFCDD2;
+    }
+
+    /* Vision Box */
+    .vision-box {
+        background-color: #900C3F;
+        padding: 30px;
+        border-radius: 20px;
+        text-align: center;
+        color: white;
+        margin: 20px 0;
+    }
+
+    .vision-box h3 { color: white !important; margin-bottom: 10px; }
+    .vision-box p { font-style: italic; opacity: 0.9; }
+
+    /* Footer */
+    .footer-text {
+        text-align: center;
+        font-size: 12px;
+        color: #A64452;
+        margin-top: 50px;
+        padding-bottom: 20px;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -85,7 +153,6 @@ def jalankan_analisis(text):
         return list(mlb.classes_[active_idx])
     return []
 
-# Kamus Deskripsi untuk Tooltip
 deskripsi_label = {
     "acne fighting": "Melawan jerawat dan membantu mencegah munculnya jerawat baru.",
     "acne trigger": "Dapat menyumbat pori-pori atau memicu timbulnya jerawat.",
@@ -110,13 +177,12 @@ deskripsi_label = {
 
 if st.session_state.analisis_selesai:
     # --- A. HALAMAN HASIL ---
-    active_labels = st.session_state.hasil_prediksi
-
-    st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align: center; margin-bottom: 30px;'>", unsafe_allow_html=True)
     st.image("logo.png", width=100) 
+    st.markdown("<h2 style='color: #900C3F;'>Analysis Result</h2>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
-    st.markdown("<h3 style='text-align: center; color: #900C3F;'>Analysis Result</h3>", unsafe_allow_html=True)
     
+    active_labels = st.session_state.hasil_prediksi
     
     manfaat_labels = {
         "acne fighting", "anti-aging", "brightening", "dark spots", 
@@ -129,97 +195,92 @@ if st.session_state.analisis_selesai:
         "may worsen oily skin", "rosacea"
     }
 
+    st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
     if not active_labels:
-        st.info("Tidak ada indikasi manfaat atau risiko spesifik yang terdeteksi.")
+        st.info("Kami tidak menemukan klaim spesifik dari daftar bahan ini.")
     else:
         manfaat_found = [l for l in active_labels if l.lower() in manfaat_labels]
         efek_found = [l for l in active_labels if l.lower() in efek_samping_labels]
 
         if manfaat_found:
-            st.markdown("**🍀 Manfaat yang ditemukan:** (Sentuh pill untuk detail)")
-            m_html = ""
-            for l in manfaat_found:
-                desc = deskripsi_label.get(l.lower(), "Informasi tidak tersedia.")
-                m_html += f'<span title="{desc}" class="pill" style="background-color: #d4edda; color: #155724; border-color: #c3e6cb;">{l.title()}</span>'
+            st.markdown("<p style='font-weight: 600; color: #2E7D32; margin-bottom: 10px;'>🍀 Manfaat Terdeteksi:</p>", unsafe_allow_html=True)
+            m_html = "".join([
+                f'<span title="{deskripsi_label.get(l.lower(), "")}" class="pill pill-manfaat">{l.title()}</span>' 
+                for l in manfaat_found
+            ])
             st.markdown(m_html, unsafe_allow_html=True)
+            st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
 
         if efek_found:
-            st.write("") 
-            st.markdown("**⚠️ Perhatian / Efek Samping:** (Sentuh pill untuk detail)")
-            e_html = ""
-            for l in efek_found:
-                desc = deskripsi_label.get(l.lower(), "Informasi tidak tersedia.")
-                e_html += f'<span title="{desc}" class="pill" style="background-color: #f8d7da; color: #721c24; border-color: #f5c6cb;">{l.title()}</span>'
+            st.markdown("<p style='font-weight: 600; color: #C62828; margin-bottom: 10px;'>⚠️ Perhatian Khusus:</p>", unsafe_allow_html=True)
+            e_html = "".join([
+                f'<span title="{deskripsi_label.get(l.lower(), "")}" class="pill pill-efek">{l.title()}</span>' 
+                for l in efek_found
+            ])
             st.markdown(e_html, unsafe_allow_html=True)
-            st.warning("Jika Anda memiliki kulit sensitif, harap perhatikan kandungan di atas.")
+            st.caption("Arahkan kursor ke label untuk melihat penjelasan lengkap.")
+    st.markdown("</div>", unsafe_allow_html=True)
 
-    st.write("---")
-    col_btn1, col_btn2, col_btn3 = st.columns([1, 2, 1])
-    with col_btn2:
-        if st.button("🔄 Analyze Another Product", use_container_width=True):
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        if st.button("🔄 Cek Produk Lain"):
             st.session_state.analisis_selesai = False
             st.rerun()
 
 else:
     # --- B. HALAMAN UTAMA (Landing Page) ---
-    col_logo, col_text = st.columns([1, 3]) 
-    with col_logo:
-        st.image("logo.png", width=120) 
-    with col_text:
-        st.markdown("""
-            <div style='display: flex; flex-direction: column; justify-content: center; height: 100px;'>
-                <h1 style='margin: 0; color: #900C3F; font-size: 28px;'>Mandali Cosmetic Ingredients Analysis</h1>
-            </div>
-        """, unsafe_allow_html=True)
+    st.markdown("<div style='text-align: center; margin-top: 20px;'>", unsafe_allow_html=True)
+    st.image("logo.png", width=120) 
+    st.markdown("<h1 class='main-title'>Mandali Analyzer</h1>", unsafe_allow_html=True)
+    st.markdown("<p class='sub-title'>Your personal cosmetic ingredients expert</p>", unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
 
-    st.markdown("""
-        <h4 style='text-align: center; background-color: #EBBAB9; padding: 15px; 
-        border-radius: 15px; color: #900C3F; margin-top: 10px;'>
-            Discover what's really in your skincare
-        </h4>
-    """, unsafe_allow_html=True)
-
-    st.write("")
-    st.markdown("<h3 style='color: #900C3F;'>Side Effect Checker</h3>", unsafe_allow_html=True)
-    text_input = st.text_area("Type or paste the list of ingredients here:", height=150, placeholder="Aqua, Glycerin, Niacinamide...")
+    # Input Section
+    st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
+    st.markdown("<p style='font-weight: 600; color: #900C3F; margin-bottom: 5px;'>Side Effect Checker</p>", unsafe_allow_html=True)
+    text_input = st.text_area("", height=150, placeholder="Salicylic Acid, Niacinamide, Glycerin...", label_visibility="collapsed")
     
-    if st.button("START ANALYSIS NOW"):
+    st.write("")
+    if st.button("MULAI ANALISIS SEKARANG"):
         if text_input.strip() == "":
-            st.warning("Silakan masukkan daftar ingredients terlebih dahulu.")
+            st.warning("Mohon masukkan daftar bahan produk Anda.")
         elif assets is None:
-            st.error("Model gagal dimuat. Periksa file .pkl Anda.")
+            st.error("Sistem sedang bermasalah, silakan coba lagi nanti.")
         else:
-            with st.status("Please wait a moment...", expanded=True) as status:
-                st.write("Sedang membedah kandungan...")
-                time.sleep(1.5)
+            with st.status("Sedang memproses data...", expanded=True) as status:
+                st.write("Menganalisis profil bahan...")
+                time.sleep(1.8)
                 st.session_state.hasil_prediksi = jalankan_analisis(text_input)
                 st.session_state.analisis_selesai = True
-                status.update(label="Analisis Selesai!", state="complete")
+                status.update(label="Selesai!", state="complete")
             st.rerun()
+    st.markdown("</div>", unsafe_allow_html=True)
 
-    # About Section
-    st.write("---")
-    col_about1, col_about2 = st.columns([1, 1.5])
-    with col_about1:
-        st.markdown("<h3 style='color: #900C3F;'>About Mandali</h3>", unsafe_allow_html=True)
-    with col_about2:
-        st.write("Mandali is a smart platform that helps you understand the ingredients in your skincare products.")
+    # Info Section
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("<div class='glass-card' style='height: 180px;'>", unsafe_allow_html=True)
+        st.markdown("<p style='font-weight: 700; color: #900C3F;'>About Mandali</p>", unsafe_allow_html=True)
+        st.markdown("<p style='font-size: 14px;'>Mandali membantu Anda memahami isi produk skincare agar keputusan belanja lebih cerdas dan aman.</p>", unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
+    with col2:
+        st.markdown("<div class='glass-card' style='height: 180px;'>", unsafe_allow_html=True)
+        st.markdown("<p style='font-weight: 700; color: #900C3F;'>Why Choose Us?</p>", unsafe_allow_html=True)
+        st.markdown("<p style='font-size: 14px;'>🔬 Berbasis Sains<br>⚡ Hasil Instan<br>👤 Personalisasi Kulit</p>", unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
+    # Vision Section
     st.markdown("""
-        <div class='section-box'>
+        <div class='vision-box'>
             <h3>Our Vision</h3>
             <p>"To make every skincare decision safer, smarter, and more personal"</p>
         </div>
     """, unsafe_allow_html=True)
-    
-    st.write("")
-    st.markdown("<h3 style='color: #900C3F;'>What Makes Mandali Different?</h3>", unsafe_allow_html=True)
-    st.markdown("""
-    * 🔬 **Science-based** ingredient analysis
-    * ✨ **Simple & elegant** design
-    * ⚡ **Instant** risk assessment
-    """)
 
 # --- Footer ---
-st.write("---")
-st.markdown("<p style='text-align: center; font-size: 0.8rem; color: #7f8c8d;'>Mandali AI By Luthfinaf © 2026</p>", unsafe_allow_html=True)
+st.markdown(f"""
+    <div class='footer-text'>
+        Mandali AI By Luthfinaf © 2026<br>
+        <span style='opacity: 0.7;'>Menganalisis ribuan data bahan untuk kesehatan kulitmu.</span>
+    </div>
+""", unsafe_allow_html=True)
