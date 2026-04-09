@@ -16,7 +16,7 @@ from scipy.sparse import issparse
 
 # Konfigurasi Halaman (Harus di paling atas)
 st.set_page_config(
-    page_title="CareSkin - Cosmetic Analyzer",
+    page_title="Mandali - Cosmetic Analyzer",
     page_icon="✨",
     layout="centered"
 )
@@ -76,7 +76,7 @@ except Exception as e:
     st.stop()
 
 # --- Header ---
-st.markdown("<h1 style='text-align: center; color: #2c3e50;'>✨ CareSkin Analyzer</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: #2c3e50;'>✨ Mandali Analyzer</h1>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; color: #7f8c8d;'>Cek manfaat dan risiko kandungan kosmetik Anda dalam satu klik.</p>", unsafe_allow_html=True)
 st.divider()
 
@@ -90,7 +90,7 @@ text_input = st.text_area(
 # --- Action Button ---
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
-    btn_predict = st.button("🚀 Analisis Kandungan Sekarang", use_container_width=True)
+    btn_predict = st.button("🚀 Analisis Sekarang", use_container_width=True)
 
 if btn_predict:
     if text_input.strip() == "":
@@ -153,4 +153,4 @@ if btn_predict:
 
 # --- Footer ---
 st.markdown("---")
-st.markdown("<p style='text-align: center; font-size: 0.8rem; color: #bdc3c7;'>CareSkin AI © 2026 - Data dianalisis berdasarkan algoritma Machine Learning</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; font-size: 0.8rem; color: #bdc3c7;'>Mandali By Luthfinaf © 2026 - Data dianalisis berdasarkan algoritma Machine Learning</p>", unsafe_allow_html=True)
